@@ -75,6 +75,10 @@ public class Appropriation implements ISpellComponent{
 		if (block == null){
 			return false;
 		}
+		
+		if(block.getClass().getName().toLowerCase().contains("botania")){
+			return false;
+		}
 
 		for (String s : AMCore.config.getAppropriationBlockBlacklist()){
 			if (block.getUnlocalizedName() == s){

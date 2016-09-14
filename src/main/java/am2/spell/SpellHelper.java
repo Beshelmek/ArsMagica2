@@ -98,11 +98,16 @@ public class SpellHelper{
 			return SpellCastResult.EFFECT_FAILED;
 		}
 		
-		if (!(caster instanceof EntityPlayer) || !EventUtils.canDamage(caster, target)) {
-			LogHelper.debug(this.getClass(), "Entity: " + caster.toString() + " can't damage " + target.toString());
-			return SpellCastResult.EFFECT_FAILED;
+		try{
+			if (!(caster instanceof EntityPlayer) || !EventUtils.canDamage(caster, target)) {
+				LogHelper.debug(this.getClass(), "Entity: " + caster.toString() + " can't damage " + target.toString());
+				return SpellCastResult.EFFECT_FAILED;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return SpellCastResult.EFFECT_FAILED;		
 		}
-
+		
 		ISpellComponent[] components = SpellUtils.instance.getComponentsForStage(stack, 0);
 
 		boolean appliedOneComponent = false;
