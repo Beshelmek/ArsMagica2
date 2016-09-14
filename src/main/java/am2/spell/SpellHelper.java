@@ -1,6 +1,7 @@
 package am2.spell;
 
 import am2.AMCore;
+import am2.LogHelper;
 import am2.api.events.ManaCostEvent;
 import am2.api.events.SpellCastingEvent;
 import am2.api.spell.ItemSpellBase;
@@ -38,9 +39,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import su.dreamcraft.utils.EventUtils;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class SpellHelper{
 
@@ -94,6 +95,11 @@ public class SpellHelper{
 		if (stageShape == null) return SpellCastResult.MALFORMED_SPELL_STACK;
 
 		if ((!AMCore.config.getAllowCreativeTargets()) && target instanceof EntityPlayerMP && ((EntityPlayerMP) target).capabilities.isCreativeMode) {
+			return SpellCastResult.EFFECT_FAILED;
+		}
+		
+		if (!(caster instanceof EntityPlayer) || !EventUtils.canDamage(caster, target)) {
+			LogHelper.debug(this.getClass(), "Entity: " + caster.toString() + " can't damage " + target.toString());
 			return SpellCastResult.EFFECT_FAILED;
 		}
 
@@ -182,7 +188,9 @@ public class SpellHelper{
 			return SpellCastResult.EFFECT_FAILED;
 
 		if (!(caster instanceof EntityPlayer)){
+			LogHelper.debug(this.getClass(), "Caster isn't player! X:" + x+ " Y:" + y +" Z:" + z);
 			consumeMBR = false;
+			return SpellCastResult.EFFECT_FAILED;
 		}
 
 		SpellCastingEvent.Pre checkEvent = null;
@@ -320,8 +328,6 @@ public class SpellHelper{
 		}
 
 		magnitude *= AMCore.config.getDamageMultiplier();
-
-		ItemStack oldItemStack = null;
 
 		boolean success = false;
 		if (target instanceof EntityDragon){

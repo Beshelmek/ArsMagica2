@@ -29,6 +29,10 @@ public class LogHelper{
 		log(Level.INFO, format, data);
 	}
 
+	public static void debug(Class clazz, String s, Object... data){
+		log(Level.DEBUG, clazz.getSimpleName() + " " +  s, data);
+	}
+	
 	public static void debug(String format, Object... data){
 	      // Log4j 1.x allowed you to set the logging level easily
 	      // Log4j 2.x removed this in favour of some kind of stupidly convoluted method

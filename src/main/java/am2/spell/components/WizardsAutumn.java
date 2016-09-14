@@ -14,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import su.dreamcraft.utils.EventUtils;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -46,7 +47,7 @@ public class WizardsAutumn implements ISpellComponent{
 					for (int k = -radius; k <= radius; ++k){
 						Block block = world.getBlock(blockx + i, blocky + j, blockz + k);
 						int meta = world.getBlockMetadata(blockx + i, blocky + j, blockz + k);
-						if (block != null && block.isLeaves(world, blockx + i, blocky + j, blockz + k)){
+						if (block != null && block.isLeaves(world, blockx + i, blocky + j, blockz + k) && EventUtils.canBreak(DummyEntityPlayer.fromEntityLiving(caster), blockx + i, blocky + j, blockz + k)){
 							if (block.removedByPlayer(world, DummyEntityPlayer.fromEntityLiving(caster), blockx + i, blocky + j, blockz + k)){
 								block.onBlockDestroyedByPlayer(world, blockx + i, blocky + j, blockz + k, meta);
 								block.harvestBlock(world, DummyEntityPlayer.fromEntityLiving(caster), blockx + i, blocky + j, blockz + k, meta);

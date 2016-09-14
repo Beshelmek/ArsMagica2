@@ -16,12 +16,14 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.BonemealEvent;
+import su.dreamcraft.utils.EventUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +59,7 @@ public class Grow implements ISpellComponent{
 			for (AMFlower flower : growableAMflowers){
 				if (flower.canGrowOn(world, blockx, blocky + 1, blockz)){
 					if (!world.isRemote){
+						if(caster instanceof EntityPlayer && !EventUtils.canBreak((EntityPlayer) caster, blockx, blocky + 1, blockz)) continue;
 						world.setBlock(blockx, blocky + 1, blockz, flower, 0, 2);
 					}
 					return true;
