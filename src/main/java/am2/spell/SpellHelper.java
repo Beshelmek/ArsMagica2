@@ -55,6 +55,22 @@ public class SpellHelper{
 		if (stageShape == null || stageShape == SkillManager.instance.missingShape){
 			return SpellCastResult.MALFORMED_SPELL_STACK;
 		}
+		
+		try{
+			String method = new Object(){}.getClass().getEnclosingMethod().getName();
+			if (!(caster instanceof EntityPlayer)) {
+				LogHelper.debug(this.getClass(), "Entity ["+method+"] is not player: " + caster.toString());
+				return SpellCastResult.EFFECT_FAILED;
+			}
+			if(!EventUtils.canBreak((EntityPlayer) caster, blockX, blockY, blockZ)){
+				LogHelper.debug(this.getClass(), "Entity ["+method+"] can't break: " + caster.toString() + " X:" + blockX + " Y:" + blockY + " Z:" + blockZ);
+				return SpellCastResult.EFFECT_FAILED;
+			}
+
+		}catch(Exception e){
+			e.printStackTrace();
+			return SpellCastResult.EFFECT_FAILED;		
+		}
 
 		ISpellComponent[] components = SpellUtils.instance.getComponentsForStage(stack, 0);
 
@@ -192,10 +208,25 @@ public class SpellHelper{
 		if (SkillTreeManager.instance.isSkillDisabled(shape))
 			return SpellCastResult.EFFECT_FAILED;
 
-		if (!(caster instanceof EntityPlayer)){
-			LogHelper.debug(this.getClass(), "Caster isn't player! X:" + x+ " Y:" + y +" Z:" + z);
-			consumeMBR = false;
-			return SpellCastResult.EFFECT_FAILED;
+		try{
+			String method = new Object(){}.getClass().getEnclosingMethod().getName();
+			if (!(caster instanceof EntityPlayer)) {
+				LogHelper.debug(this.getClass(), "Entity ["+method+"] is not player: " + caster.toString());
+				return SpellCastResult.EFFECT_FAILED;
+			}
+			if(!EventUtils.canBreak((EntityPlayer) caster, (int)x, (int)y, (int)z)){
+				LogHelper.debug(this.getClass(), "Entity ["+method+"] can't break: " + caster.toString() + " X:" + x + " Y:" + y + " Z:" + z);
+				return SpellCastResult.EFFECT_FAILED;
+			}
+			if(target != null && !caster.equals(target)){
+				if(!EventUtils.canDamage(caster, target)){
+					LogHelper.debug(this.getClass(), "Entity ["+method+"] can't damage: " + caster.toString() + " " + target.toString());
+					return SpellCastResult.EFFECT_FAILED;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return SpellCastResult.EFFECT_FAILED;		
 		}
 
 		SpellCastingEvent.Pre checkEvent = null;
@@ -290,6 +321,24 @@ public class SpellHelper{
 			return true;
 
 		EntityPlayer dmgSrcPlayer = null;
+		
+		try{
+			EntityPlayer caster = (EntityPlayer) damagesource.getSourceOfDamage();
+			String method = new Object(){}.getClass().getEnclosingMethod().getName();
+			if (!(caster instanceof EntityPlayer)) {
+				LogHelper.debug(this.getClass(), "Entity ["+method+"] is not player: " + caster.toString());
+				return false;
+			}
+			if(target != null && !caster.equals(target)){
+				if(!EventUtils.canDamage(caster, target)){
+					LogHelper.debug(this.getClass(), "Entity ["+method+"] can't damage: " + caster.toString() + " " + target.toString());
+					return false;
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;		
+		}
 
 		if (damagesource.getSourceOfDamage() != null){
 			if (damagesource.getSourceOfDamage() instanceof EntityLivingBase){

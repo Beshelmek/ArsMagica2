@@ -55,14 +55,15 @@ public class TileEntityMagiciansWorkbench extends TileEntity implements IInvento
 		setPrevDrawerOffset(getDrawerOffset());
 
 		if (numPlayersUsing > 0){
-			if (getDrawerOffset() == drawerMin){
+			this.worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
+			/*if (getDrawerOffset() == drawerMin){
 				//sound could go here
 			}
 			if (getDrawerOffset() < drawerMax){
 				setDrawerOffset(getDrawerOffset() + drawerIncrement);
 			}else{
 				setDrawerOffset(drawerMax);
-			}
+			}*/
 		}else{
 			if (getDrawerOffset() == drawerMax){
 				this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, "random.chestclosed", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);

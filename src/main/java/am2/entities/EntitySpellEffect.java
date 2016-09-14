@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+import su.dreamcraft.utils.EventUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -299,7 +300,7 @@ public class EntitySpellEffect extends Entity{
 				int pX = (int)(posX - radius + rand.nextInt((int)Math.ceil(radius) * 2));
 				int pY = (int)posY;
 				int pZ = (int)(posZ - radius + rand.nextInt((int)Math.ceil(radius) * 2));
-				if (worldObj.isAirBlock(pX, pY, pZ))
+				if (worldObj.isAirBlock(pX, pY, pZ) && EventUtils.canBreak(dummycaster, pX, pY, pZ))
 					worldObj.setBlock(pX, pY, pZ, Blocks.fire);
 			}
 		}
@@ -384,7 +385,7 @@ public class EntitySpellEffect extends Entity{
 				int pX = (int)(posX - radius + rand.nextInt((int)Math.ceil(radius) * 2));
 				int pY = (int)posY + rand.nextInt(2);
 				int pZ = (int)(posZ - radius + rand.nextInt((int)Math.ceil(radius) * 2));
-				if (worldObj.isAirBlock(pX, pY, pZ) && !worldObj.isAirBlock(pX, pY - 1, pZ) && worldObj.getBlock(pX, pY, pZ).isOpaqueCube())
+				if (worldObj.isAirBlock(pX, pY, pZ) && !worldObj.isAirBlock(pX, pY - 1, pZ) && worldObj.getBlock(pX, pY, pZ).isOpaqueCube() && EventUtils.canBreak(dummycaster, pX, pY, pZ))
 					worldObj.setBlock(pX, pY, pZ, Blocks.snow);
 			}
 		}
